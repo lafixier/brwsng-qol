@@ -1,13 +1,13 @@
 const StorageManager = class {
-    static getNumberOfTabs() {
+    static get(key) {
         return new Promise((resolve) => {
-            chrome.storage.local.get(["numberOfTabs"], (result) => {
-                resolve(result.numberOfTabs);
+            chrome.storage.local.get([key], (result) => {
+                resolve(result[key]);
             });
         });
     }
-    static setNumberOfTabs(numberOfTabs) {
-        chrome.storage.local.set({ numberOfTabs: numberOfTabs }, () => {
+    static set(key, value) {
+        chrome.storage.local.set({ [key]: value }, () => {
             console.log("Settings saved");
         });
     }
@@ -22,9 +22,11 @@ const Badge = class {
 const main = async () => {
     chrome.tabs.query({ currentWindow: true }, async (tabs) => {
         const NumberOfTabs = tabs.length;
-        const NumberOfTabsFromStorage = await StorageManager.getNumberOfTabs();
+        const NumberOfTabsFromStorage = await StorageManager.get(
+            "numberOfTabs"
+        );
         if (NumberOfTabsFromStorage !== NumberOfTabs) {
-            StorageManager.setNumberOfTabs(NumberOfTabs);
+            StorageManager.set("numberOfTabs", NumberOfTabs);
             Badge.setText(NumberOfTabs.toString());
         }
     });
