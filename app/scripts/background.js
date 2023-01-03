@@ -1,5 +1,5 @@
-browser.runtime.onInstalled.addListener((details) => {
-    console.log("previousVersion", details.previousVersion);
-});
-
-console.log(`'Allo 'Allo! Event Page`);
+setInterval(() => {
+    chrome.tabs.query({ currentWindow: true }, (tabs) => {
+        chrome.browserAction.setBadgeText({ text: String(tabs.length) });
+    });
+}, 500);
