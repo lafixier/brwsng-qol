@@ -14,8 +14,8 @@ const StorageManager = class {
 };
 
 const Badge = class {
-    static setBadgeText(numberOfTabs) {
-        chrome.browserAction.setBadgeText({ text: numberOfTabs.toString() });
+    static setText(numberOfTabs) {
+        chrome.browserAction.setBadgeText({ text: numberOfTabs });
     }
 };
 
@@ -25,7 +25,7 @@ async function main() {
         const NumberOfTabsFromStorage = await StorageManager.getNumberOfTabs();
         if (NumberOfTabsFromStorage !== NumberOfTabs) {
             StorageManager.setNumberOfTabs(NumberOfTabs);
-            Badge.setBadgeText(NumberOfTabs);
+            Badge.setText(NumberOfTabs.toString());
         }
     });
 }
