@@ -23,8 +23,11 @@ async function main() {
     chrome.tabs.query({ currentWindow: true }, async (tabs) => {
         const NumberOfTabs = tabs.length;
         const NumberOfTabsFromStorage = await StorageManager.getNumberOfTabs();
-        console.log(NumberOfTabsFromStorage);
+        if (NumberOfTabsFromStorage !== NumberOfTabs) {
+            StorageManager.setNumberOfTabs(NumberOfTabs);
+            Badge.setBadgeText(NumberOfTabs);
+        }
     });
 }
-main();
-// setInterval(main, 5500);
+
+setInterval(main, 500);
