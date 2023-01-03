@@ -19,7 +19,7 @@ const Badge = class {
     }
 };
 
-async function main() {
+const main = async () => {
     chrome.tabs.query({ currentWindow: true }, async (tabs) => {
         const NumberOfTabs = tabs.length;
         const NumberOfTabsFromStorage = await StorageManager.getNumberOfTabs();
@@ -28,6 +28,6 @@ async function main() {
             Badge.setText(NumberOfTabs.toString());
         }
     });
-}
+};
 
 setInterval(main, 500);
