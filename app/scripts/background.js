@@ -14,8 +14,8 @@ const StorageManager = class {
 };
 
 const Badge = class {
-    static setText(numberOfTabs) {
-        chrome.browserAction.setBadgeText({ text: numberOfTabs });
+    static setText(text) {
+        chrome.browserAction.setBadgeText({ text: text });
     }
 };
 
