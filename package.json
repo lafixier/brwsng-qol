@@ -1,12 +1,12 @@
 {
-  "name": "brwsng-qol",
-  "version": "1.0.0",
-  "description": "Test.",
-  "scripts": {
-    "dev": "webextension-toolbox dev",
-    "build": "webextension-toolbox build"
-  },
-  "devDependencies": {
-    "webextension-toolbox": "latest"
-  }
+    "name": "brwsng-qol",
+    "version": "1.0.0",
+    "description": "Test.",
+    "scripts": {
+        "dev": "webextension-toolbox dev",
+        "build": "webextension-toolbox build"
+    },
+    "devDependencies": {
+        "webextension-toolbox": "latest"
+    }
 }
