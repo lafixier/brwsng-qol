@@ -19,6 +19,27 @@ const Badge = class {
     }
 };
 
+chrome.tabs.onCreated.addListener(async () => {
+    const CumulativeNumberOfTabsOpened = await StorageManager.get(
+        "cumulativeNumberOfTabsOpened"
+    );
+    if (CumulativeNumberOfTabsOpened === undefined) {
+        const NumberOfTabsFromStorage = await StorageManager.get(
+            "numberOfTabs"
+        );
+        StorageManager.set(
+            "cumulativeNumberOfTabsOpened",
+            NumberOfTabsFromStorage + 1
+        );
+        return;
+    }
+    console.log(CumulativeNumberOfTabsOpened);
+    StorageManager.set(
+        "cumulativeNumberOfTabsOpened",
+        CumulativeNumberOfTabsOpened + 1
+    );
+});
+
 const main = async () => {
     chrome.tabs.query({ currentWindow: true }, async (tabs) => {
         const NumberOfTabs = tabs.length;
@@ -29,6 +50,13 @@ const main = async () => {
             StorageManager.set("numberOfTabs", NumberOfTabs);
             Badge.setText(NumberOfTabs.toString());
         }
+        const CumulativeNumberOfTabsOpened = await StorageManager.get(
+            "cumulativeNumberOfTabsOpened"
+        );
+        chrome.runtime.sendMessage({
+            type: "updateCumulativeNumberOfTabsOpened",
+            value: CumulativeNumberOfTabsOpened,
+        });
     });
 };
 
