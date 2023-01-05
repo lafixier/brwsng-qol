@@ -50,6 +50,13 @@ const main = async () => {
             StorageManager.set("numberOfTabs", NumberOfTabs);
             Badge.setText(NumberOfTabs.toString());
         }
+        const CumulativeNumberOfTabsOpened = await StorageManager.get(
+            "cumulativeNumberOfTabsOpened"
+        );
+        chrome.runtime.sendMessage({
+            type: "updateCumulativeNumberOfTabsOpened",
+            value: CumulativeNumberOfTabsOpened,
+        });
     });
 };
 
