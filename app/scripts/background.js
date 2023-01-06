@@ -1,3 +1,5 @@
+const DefaultLimitOnMaxNumberOfTabs = 50;
+
 const StorageManager = class {
     static get(key) {
         return new Promise((resolve) => {
@@ -18,6 +20,16 @@ const Badge = class {
         chrome.browserAction.setBadgeText({ text: text });
     }
 };
+
+chrome.runtime.onInstalled.addListener(async () => {
+    const LimitOnMaxNumberOfTabs = await StorageManager.get(
+        "limitOnMaxNumberOfTabs"
+    );
+    StorageManager.set(
+        "limitOnMaxNumberOfTabs",
+        LimitOnMaxNumberOfTabs || DefaultLimitOnMaxNumberOfTabs
+    );
+});
 
 chrome.tabs.onCreated.addListener(async () => {
     const CumulativeNumberOfTabsOpened = await StorageManager.get(

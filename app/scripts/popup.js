@@ -22,3 +22,19 @@ chrome.runtime.onMessage.addListener((message) => {
             break;
     }
 });
+
+document
+    .getElementById("limit-on-max-number-of-tabs")
+    .addEventListener("change", (event) => {
+        StorageManager.set("limitOnMaxNumberOfTabs", event.target.value);
+    });
+
+const main = async () => {
+    const LimitOnMaxNumberOfTabs = await StorageManager.get(
+        "limitOnMaxNumberOfTabs"
+    );
+    document.getElementById("limit-on-max-number-of-tabs").value =
+        LimitOnMaxNumberOfTabs;
+};
+
+main();
