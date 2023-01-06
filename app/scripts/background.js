@@ -21,6 +21,16 @@ const Badge = class {
     }
 };
 
+const sendWarningNotification = async () => {
+    const NumberOfTabs = (await StorageManager.get("numberOfTabs")) + 1;
+    chrome.notifications.create({
+        type: "basic",
+        iconUrl: chrome.runtime.getURL("images/icon-128.png"),
+        title: "Warning | Brwsng QOL",
+        message: `You have opened ${NumberOfTabs} tabs.\nPlease close some tabs.`,
+    });
+};
+
 chrome.runtime.onInstalled.addListener(async () => {
     const LimitOnMaxNumberOfTabs = await StorageManager.get(
         "limitOnMaxNumberOfTabs"
@@ -32,6 +42,13 @@ chrome.runtime.onInstalled.addListener(async () => {
 });
 
 chrome.tabs.onCreated.addListener(async () => {
+    const NumberOfTabs = await StorageManager.get("numberOfTabs");
+    const LimitOnMaxNumberOfTabs = await StorageManager.get(
+        "limitOnMaxNumberOfTabs"
+    );
+    if (NumberOfTabs + 1 > LimitOnMaxNumberOfTabs) {
+        sendWarningNotification();
+    }
     const CumulativeNumberOfTabsOpened = await StorageManager.get(
         "cumulativeNumberOfTabsOpened"
     );
