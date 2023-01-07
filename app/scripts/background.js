@@ -1,4 +1,8 @@
 const DefaultLimitOnMaxNumberOfTabs = 50;
+const Colors = {
+    Red: "red",
+    Green: "green",
+};
 
 const StorageManager = class {
     static get(key) {
@@ -18,6 +22,9 @@ const StorageManager = class {
 const Badge = class {
     static setText(text) {
         chrome.browserAction.setBadgeText({ text: text });
+    }
+    static setBackgroundColor(color) {
+        chrome.browserAction.setBadgeBackgroundColor({ color: color });
     }
 };
 
@@ -48,6 +55,7 @@ chrome.tabs.onCreated.addListener(async () => {
     );
     if (NumberOfTabs + 1 > LimitOnMaxNumberOfTabs) {
         sendWarningNotification();
+        Badge.setBackgroundColor(Colors.Red);
     }
     const CumulativeNumberOfTabsOpened = await StorageManager.get(
         "cumulativeNumberOfTabsOpened"
@@ -78,6 +86,12 @@ const main = async () => {
         if (NumberOfTabsFromStorage !== NumberOfTabs) {
             StorageManager.set("numberOfTabs", NumberOfTabs);
             Badge.setText(NumberOfTabs.toString());
+        }
+        const LimitOnMaxNumberOfTabs = await StorageManager.get(
+            "limitOnMaxNumberOfTabs"
+        );
+        if (NumberOfTabs <= LimitOnMaxNumberOfTabs) {
+            Badge.setBackgroundColor(Colors.Green);
         }
         const CumulativeNumberOfTabsOpened = await StorageManager.get(
             "cumulativeNumberOfTabsOpened"
