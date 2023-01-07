@@ -13,9 +13,7 @@ const StorageManager = class {
         });
     }
     static set(key, value) {
-        chrome.storage.local.set({ [key]: value }, () => {
-            console.log("Settings saved");
-        });
+        chrome.storage.local.set({ [key]: value }, () => {});
     }
 };
 
@@ -67,7 +65,6 @@ chrome.tabs.onCreated.addListener(async () => {
     const CumulativeNumberOfTabsOpened = await StorageManager.get(
         "cumulativeNumberOfTabsOpened"
     );
-    console.log(CumulativeNumberOfTabsOpened);
     StorageManager.set(
         "cumulativeNumberOfTabsOpened",
         CumulativeNumberOfTabsOpened + 1

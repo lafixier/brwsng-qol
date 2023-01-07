@@ -7,9 +7,7 @@ const StorageManager = class {
         });
     }
     static set(key, value) {
-        chrome.storage.local.set({ [key]: value }, () => {
-            console.log("Settings saved");
-        });
+        chrome.storage.local.set({ [key]: value }, () => {});
     }
 };
 
