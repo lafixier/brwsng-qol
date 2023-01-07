@@ -1,4 +1,8 @@
 const DefaultLimitOnMaxNumberOfTabs = 50;
+const Colors = {
+    Red: "red",
+    Green: "green",
+};
 
 const StorageManager = class {
     static get(key) {
@@ -19,6 +23,19 @@ const Badge = class {
     static setText(text) {
         chrome.browserAction.setBadgeText({ text: text });
     }
+    static setBackgroundColor(color) {
+        chrome.browserAction.setBadgeBackgroundColor({ color: color });
+    }
+};
+
+const sendWarningNotification = async () => {
+    const NumberOfTabs = (await StorageManager.get("numberOfTabs")) + 1;
+    chrome.notifications.create({
+        type: "basic",
+        iconUrl: chrome.runtime.getURL("images/icon-128.png"),
+        title: "Warning | Brwsng QOL",
+        message: `You have opened ${NumberOfTabs} tabs.\nPlease close some tabs.`,
+    });
 };
 
 chrome.runtime.onInstalled.addListener(async () => {
@@ -32,6 +49,14 @@ chrome.runtime.onInstalled.addListener(async () => {
 });
 
 chrome.tabs.onCreated.addListener(async () => {
+    const NumberOfTabs = await StorageManager.get("numberOfTabs");
+    const LimitOnMaxNumberOfTabs = await StorageManager.get(
+        "limitOnMaxNumberOfTabs"
+    );
+    if (NumberOfTabs + 1 > LimitOnMaxNumberOfTabs) {
+        sendWarningNotification();
+        Badge.setBackgroundColor(Colors.Red);
+    }
     const CumulativeNumberOfTabsOpened = await StorageManager.get(
         "cumulativeNumberOfTabsOpened"
     );
@@ -61,6 +86,12 @@ const main = async () => {
         if (NumberOfTabsFromStorage !== NumberOfTabs) {
             StorageManager.set("numberOfTabs", NumberOfTabs);
             Badge.setText(NumberOfTabs.toString());
+        }
+        const LimitOnMaxNumberOfTabs = await StorageManager.get(
+            "limitOnMaxNumberOfTabs"
+        );
+        if (NumberOfTabs <= LimitOnMaxNumberOfTabs) {
+            Badge.setBackgroundColor(Colors.Green);
         }
         const CumulativeNumberOfTabsOpened = await StorageManager.get(
             "cumulativeNumberOfTabsOpened"
