@@ -42,9 +42,16 @@ chrome.runtime.onInstalled.addListener(async () => {
     const LimitOnMaxNumberOfTabs = await StorageManager.get(
         "limitOnMaxNumberOfTabs"
     );
+    const CumulativeNumberOfTabsOpened = await StorageManager.get(
+        "cumulativeNumberOfTabsOpened"
+    );
     StorageManager.set(
         "limitOnMaxNumberOfTabs",
         LimitOnMaxNumberOfTabs || DefaultLimitOnMaxNumberOfTabs
+    );
+    StorageManager.set(
+        "cumulativeNumberOfTabsOpened",
+        CumulativeNumberOfTabsOpened || 0
     );
 });
 
@@ -60,16 +67,6 @@ chrome.tabs.onCreated.addListener(async () => {
     const CumulativeNumberOfTabsOpened = await StorageManager.get(
         "cumulativeNumberOfTabsOpened"
     );
-    if (CumulativeNumberOfTabsOpened === undefined) {
-        const NumberOfTabsFromStorage = await StorageManager.get(
-            "numberOfTabs"
-        );
-        StorageManager.set(
-            "cumulativeNumberOfTabsOpened",
-            NumberOfTabsFromStorage + 1
-        );
-        return;
-    }
     console.log(CumulativeNumberOfTabsOpened);
     StorageManager.set(
         "cumulativeNumberOfTabsOpened",
