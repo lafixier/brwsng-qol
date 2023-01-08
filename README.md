@@ -22,7 +22,7 @@ This extension prevents you from opening too many tabs in your browser and enhan
 
 ## Environment
 
-The build tool also defines a variable named `process.env.NODE_ENV` in your scripts.
+Ubuntu 20.04.5 LTS on Windows 10 x86_64
 
 ## Docs
 
